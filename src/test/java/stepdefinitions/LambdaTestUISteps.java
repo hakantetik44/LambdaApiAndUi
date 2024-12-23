@@ -9,6 +9,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.LambdaTestPage;
+import utilities.Driver;
 
 import java.time.Duration;
 
@@ -18,7 +19,7 @@ public class LambdaTestUISteps {
     private LambdaTestPage page;
 
     public LambdaTestUISteps() {
-        this.driver = hooks.Hooks.getDriver();
+        this.driver = Driver.getDriver();
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         this.page = new LambdaTestPage(driver);
     }

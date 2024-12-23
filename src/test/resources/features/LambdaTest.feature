@@ -16,12 +16,21 @@ Feature: LambdaTest E-ticaret Testleri
 
   @api
   Scenario: API - Ürün Arama
-    When "/index.php?route=product/search&search=iphone" adresine GET isteği gönderiyorum
-    Then Yanıt durum kodu 200 olmalı
-    And Yanıt "iPhone" ürünlerini içermeli
+    Given API testi için request hazırlanır
+    When API endpoint'ine "iphone" araması için GET isteği gönderilir
+    Then API yanıtı başarılı olmalıdır
+    And Arama yanıtı "iPhone" ürünlerini içermeli
 
   @api
   Scenario: API - Kategori Ürünlerini Görüntüleme
-    When "/index.php?route=product/category&path=33" adresine GET isteği gönderiyorum
-    Then Yanıt durum kodu 200 olmalı
-    And Yanıt "camera" ürünlerini içermeli
+    Given API testi için request hazırlanır
+    When API endpoint'ine GET isteği gönderilir
+    Then API yanıtı başarılı olmalıdır
+    And Arama yanıtı "camera" ürünlerini içermeli
+
+  @api @negative
+  Scenario: API - Geçersiz Kategori ID ile Hata Kontrolü
+    Given API testi için request hazırlanır
+    When API endpoint'ine geçersiz kategori ID'si ile GET isteği gönderilir
+    Then API yanıtı 404 hata kodu dönmeli
+    And Yanıt hata mesajı içermeli
