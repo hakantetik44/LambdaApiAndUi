@@ -1,0 +1,4 @@
+Senaryo: Ürün kategorilerini görüntüleme
+Durum: ✅ PASSED
+Süre: 7,36 saniye
+Hata: Yok

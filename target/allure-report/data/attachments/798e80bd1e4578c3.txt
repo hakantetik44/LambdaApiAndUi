@@ -1,0 +1,4 @@
+Senaryo: API - Kategori Ürünlerini Görüntüleme
+Durum: ✅ PASSED
+Süre: 1,76 saniye
+Hata: Yok

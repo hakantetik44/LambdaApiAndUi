@@ -1,0 +1,4 @@
+Senaryo: Ürün arama
+Durum: ✅ PASSED
+Süre: 7,92 saniye
+Hata: Yok

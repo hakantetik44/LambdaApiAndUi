@@ -18,24 +18,45 @@ public class LambdaTestPage {
         PageFactory.initElements(driver, this);
     }
 
-    @FindBy(css = "input[name='search']")
-    public WebElement searchInput;
+    @FindBy(name = "search")
+    public WebElement searchBox;
 
-    @FindBy(css = ".search-button button[type='submit']")
+    @FindBy(css = "button.type-text")
     public WebElement searchButton;
 
-    @FindBy(css = ".product-layout")
-    public List<WebElement> searchResults;
+    @FindBy(id = "entry_212469")
+    public WebElement searchResultsContainer;
 
-    @FindBy(css = "#entry_217841 .nav-link")
-    public List<WebElement> categoryList;
-    
-    @FindBy(css = "#entry_217834 button")
-    public WebElement categoryMenuButton;
-    
-    @FindBy(css = ".product-thumb h4")
-    public List<WebElement> productNames;
-    
-    @FindBy(css = ".price-new")
-    public List<WebElement> productPrices;
+    @FindBy(css = ".product-thumb")
+    public List<WebElement> productList;
+
+    @FindBy(css = ".product-thumb .title")
+    public List<WebElement> productTitles;
+
+    @FindBy(css = "#widget-navbar-217834 .nav-link")
+    public List<WebElement> categoryLinks;
+
+    // Yardımcı metodlar
+    public String getProductTitle(WebElement product) {
+        return product.findElement(By.cssSelector(".title")).getText();
+    }
+
+    public boolean isProductVisible(String productName) {
+        return productList.stream()
+                .anyMatch(product -> getProductTitle(product).toLowerCase()
+                        .contains(productName.toLowerCase()));
+    }
+
+    public boolean isCategoryVisible(String categoryName) {
+        return categoryLinks.stream()
+                .anyMatch(category -> category.getText().toLowerCase()
+                        .contains(categoryName.toLowerCase()));
+    }
+
+    public void printCategories() {
+        System.out.println("\n📋 Mevcut kategoriler:");
+        categoryLinks.forEach(category -> 
+            System.out.println("  - " + category.getText())
+        );
+    }
 }

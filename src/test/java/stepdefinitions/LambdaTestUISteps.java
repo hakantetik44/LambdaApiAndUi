@@ -4,16 +4,13 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.LambdaTestPage;
 
 import java.time.Duration;
-import java.util.List;
 
 public class LambdaTestUISteps {
     private WebDriver driver;
@@ -31,47 +28,38 @@ public class LambdaTestUISteps {
         System.out.println("\n🌐 LambdaTest anasayfasına gidiliyor...");
         driver.get("https://ecommerce-playground.lambdatest.io/");
         System.out.println("✅ Anasayfa başarıyla yüklendi");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("input[name='search']")));
+        wait.until(ExpectedConditions.visibilityOf(page.searchBox));
     }
 
     @When("{string} için arama yaparım")
     public void aramaYaparim(String arananUrun) {
         System.out.println("\n🔍 Aranıyor: " + arananUrun);
-        WebElement searchBox = driver.findElement(By.name("search"));
-        searchBox.clear();
-        searchBox.sendKeys(arananUrun);
+        page.searchBox.clear();
+        page.searchBox.sendKeys(arananUrun);
         System.out.println("⌨️ Arama terimi girildi: " + arananUrun);
         
-        WebElement searchButton = driver.findElement(By.cssSelector("button.type-text"));
-        searchButton.click();
+        page.searchButton.click();
         System.out.println("🖱️ Arama butonuna tıklandı");
     }
 
     @Then("Arama sonuçları görüntülenir")
     public void aramaSonuclariGoruntulenir() {
         System.out.println("\n🔎 Arama sonuçları kontrol ediliyor...");
-        WebElement searchResults = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("entry_212469")));
-        Assert.assertTrue("Arama sonuçları görüntülenmiyor", searchResults.isDisplayed());
+        wait.until(ExpectedConditions.visibilityOf(page.searchResultsContainer));
+        Assert.assertTrue("Arama sonuçları görüntülenmiyor", page.searchResultsContainer.isDisplayed());
         System.out.println("✅ Arama sonuçları başarıyla görüntülendi");
     }
 
     @Then("Sonuçlarda {string} bulunur")
     public void sonuclardaBulunur(String beklenenUrun) {
         System.out.println("\n🔍 Sonuçlarda ürün aranıyor: " + beklenenUrun);
-        List<WebElement> products = driver.findElements(By.cssSelector(".product-thumb"));
-        boolean found = false;
-        int urunSayisi = 0;
         
-        for (WebElement product : products) {
-            String productTitle = product.findElement(By.cssSelector(".title")).getText();
-            System.out.println("📦 Bulunan ürün: " + productTitle);
-            if (productTitle.toLowerCase().contains(beklenenUrun.toLowerCase())) {
-                found = true;
-                urunSayisi++;
-            }
-        }
+        long urunSayisi = page.productList.stream()
+                .filter(product -> page.getProductTitle(product).toLowerCase()
+                        .contains(beklenenUrun.toLowerCase()))
+                .count();
         
-        Assert.assertTrue("Ürün bulunamadı: " + beklenenUrun, found);
+        Assert.assertTrue("Ürün bulunamadı: " + beklenenUrun, page.isProductVisible(beklenenUrun));
         System.out.println("✅ " + beklenenUrun + " ile eşleşen " + urunSayisi + " ürün bulundu");
     }
 
@@ -80,12 +68,14 @@ public class LambdaTestUISteps {
         try {
             System.out.println("\n📋 Kategori menüsü yükleniyor...");
             Thread.sleep(2000);
-            List<WebElement> categories = driver.findElements(By.cssSelector("#widget-navbar-217834 .nav-link"));
-            Assert.assertTrue("Kategoriler bulunamadı", categories.size() > 0);
-            System.out.println("📊 " + categories.size() + " kategori bulundu");
+            Assert.assertTrue("Kategoriler bulunamadı", !page.categoryLinks.isEmpty());
+            System.out.println("📊 " + page.categoryLinks.size() + " kategori bulundu");
             
             System.out.println("🖱️ Kategoriler görünür hale getiriliyor");
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", categories.get(0));
+            ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView(true);", 
+                page.categoryLinks.get(0)
+            );
             System.out.println("✅ Kategoriler menüsü görünür durumda");
             
         } catch (InterruptedException e) {
@@ -97,28 +87,19 @@ public class LambdaTestUISteps {
     @Then("Tüm ürün kategorileri listelenir")
     public void tumUrunKategorileriListelenir() {
         System.out.println("\n📋 Kategori listesi kontrol ediliyor...");
-        List<WebElement> categories = driver.findElements(By.cssSelector("#widget-navbar-217834 .nav-link"));
-        Assert.assertTrue("Kategori listesi boş", categories.size() > 0);
-        System.out.println("✅ Toplam " + categories.size() + " kategori bulundu");
+        Assert.assertTrue("Kategori listesi boş", !page.categoryLinks.isEmpty());
+        System.out.println("✅ Toplam " + page.categoryLinks.size() + " kategori bulundu");
     }
 
     @Then("{string} kategorisi bulunur")
     public void kategorisiBulunur(String kategoriAdi) {
         System.out.println("\n🔍 Kategori aranıyor: " + kategoriAdi);
-        List<WebElement> categories = driver.findElements(By.cssSelector("#widget-navbar-217834 .nav-link"));
-        System.out.println("\n📋 Mevcut kategoriler:");
-        for (WebElement category : categories) {
-            System.out.println("  - " + category.getText());
-        }
+        page.printCategories();
         
-        boolean found = false;
-        for (WebElement category : categories) {
-            if (category.getText().toLowerCase().contains(kategoriAdi.toLowerCase())) {
-                found = true;
-                System.out.println("✅ Kategori bulundu: " + kategoriAdi);
-                break;
-            }
-        }
-        Assert.assertTrue("Kategori bulunamadı: " + kategoriAdi, found);
+        Assert.assertTrue(
+            "Kategori bulunamadı: " + kategoriAdi, 
+            page.isCategoryVisible(kategoriAdi)
+        );
+        System.out.println("✅ Kategori bulundu: " + kategoriAdi);
     }
 }
