@@ -1,6 +1,0 @@
-Search Term: iPhone
-Response Size: 141220 characters
-Found in Response: true
-
-Response Preview (first 1000 chars):
-<!doctype html><html dir="ltr" lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta http-equiv="x-ua-compatible" content="ıe=edge"><meta property="og:type" content="website" /><meta property="og:locale" content="en_gb" /><title>search - iphone</title><base href="https://ecommerce-playground.lambdatest.io/" /><link href="catalog/view/theme/mz_poco/asset/stylesheet/megastore-2.28/combine/ed8928bf7b99e0d83f042b933c6f19ec.css" type="text/css" rel="stylesheet" media="all" /><link href="https://ecommerce-playground.lambdatest.io/image/catalog/cart.png" rel="icon" /><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script><!--custom code between head tag--></head><body class="product-search" > <div class="mz-pure-container"> <div id='mz-component-1626147655' class="mz-pure-drawer d-flex flex-column" data-position="left"> <h5 class="flex-shrink-0 m-0 d-flex align-items-center gutters b

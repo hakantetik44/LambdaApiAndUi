@@ -1,3 +1,0 @@
-Expected Status Code: 200
-Actual Status Code: 200
-Result: ✅ PASSED

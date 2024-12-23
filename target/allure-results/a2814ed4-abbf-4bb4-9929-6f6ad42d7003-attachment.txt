@@ -1,4 +1,0 @@
-Test Summary:
-Test Name: API - Ürün Arama
-Duration: 2371ms
-Status: ✅ PASSED

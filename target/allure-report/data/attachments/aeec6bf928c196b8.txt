@@ -1,6 +1,0 @@
-Environment Information:
-
-Java Version: 17.0.13
-OS: Mac OS X
-OS Version: 15.2
-REST Assured Version: null
