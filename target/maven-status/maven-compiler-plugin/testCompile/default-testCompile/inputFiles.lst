@@ -1,0 +1,14 @@
+/Users/hakantetik/Desktop/Api/src/test/java/hooks/Hooks.java
+/Users/hakantetik/Desktop/Api/src/test/java/pages/BasePage.java
+/Users/hakantetik/Desktop/Api/src/test/java/pages/LambdaTestApiClient.java
+/Users/hakantetik/Desktop/Api/src/test/java/pages/LambdaTestPage.java
+/Users/hakantetik/Desktop/Api/src/test/java/runners/TestRunner.java
+/Users/hakantetik/Desktop/Api/src/test/java/stepdefinitions/ApiSteps.java
+/Users/hakantetik/Desktop/Api/src/test/java/stepdefinitions/Hooks.java
+/Users/hakantetik/Desktop/Api/src/test/java/stepdefinitions/LambdaTestApiSteps.java
+/Users/hakantetik/Desktop/Api/src/test/java/stepdefinitions/LambdaTestUISteps.java
+/Users/hakantetik/Desktop/Api/src/test/java/utilities/ApiTestLogger.java
+/Users/hakantetik/Desktop/Api/src/test/java/utilities/ConfigReader.java
+/Users/hakantetik/Desktop/Api/src/test/java/utilities/Driver.java
+/Users/hakantetik/Desktop/Api/src/test/java/utilities/TestContext.java
+/Users/hakantetik/Desktop/Api/src/test/java/utilities/VideoRecorder.java

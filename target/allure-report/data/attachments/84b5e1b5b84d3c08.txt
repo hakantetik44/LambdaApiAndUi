@@ -1,0 +1,4 @@
+Senaryo: API - Ürün Arama
+Durum: ✅ PASSED
+Süre: 3,03 saniye
+Hata: Yok

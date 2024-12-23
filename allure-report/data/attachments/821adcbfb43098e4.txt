@@ -1,0 +1,4 @@
+Base URL: https://ecommerce-playground.lambdatest.io
+Headers:
+  Content-Type: application/json
+  Accept: application/json
