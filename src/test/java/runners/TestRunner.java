@@ -17,7 +17,7 @@ import java.io.IOException;
         },
         features = "src/test/resources/features",
         glue = {"stepdefinitions", "hooks"},
-        tags = ""  // Tüm testleri çalıştırmak için boş bırakıyoruz
+        tags = "@OrderAPI or @ui or @api"  // Tüm testleri çalıştırmak için tag'leri güncelliyoruz
 )
 public class TestRunner {
     

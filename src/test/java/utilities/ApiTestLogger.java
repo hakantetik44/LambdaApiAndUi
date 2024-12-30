@@ -6,6 +6,8 @@ import io.restassured.specification.QueryableRequestSpecification;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.SpecificationQuerier;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +20,8 @@ public class ApiTestLogger {
         }
     };
 
+    private static final Logger logger = LoggerFactory.getLogger(ApiTestLogger.class);
+
     public static void initializeTest(String testName) {
         Map<String, Object> context = testContext.get();
         context.clear();
@@ -29,22 +33,22 @@ public class ApiTestLogger {
     public static void logRequest(RequestSpecification requestSpec) {
         try {
             QueryableRequestSpecification queryableRequest = SpecificationQuerier.query(requestSpec);
-            
+
             StringBuilder requestDetails = new StringBuilder();
             requestDetails.append("Request Details:\n");
             requestDetails.append("Method: ").append(queryableRequest.getMethod()).append("\n");
             requestDetails.append("URL: ").append(queryableRequest.getURI()).append("\n");
-            
+
             requestDetails.append("\nHeaders:\n");
             queryableRequest.getHeaders().forEach(header ->
                 requestDetails.append(header.getName()).append(": ").append(header.getValue()).append("\n"));
-            
+
             if (!queryableRequest.getQueryParams().isEmpty()) {
                 requestDetails.append("\nQuery Parameters:\n");
                 queryableRequest.getQueryParams().forEach((key, value) ->
                     requestDetails.append(key).append(": ").append(value).append("\n"));
             }
-            
+
             if (queryableRequest.getBody() != null) {
                 requestDetails.append("\nRequest Body:\n");
                 try {
@@ -54,9 +58,9 @@ public class ApiTestLogger {
                     requestDetails.append(queryableRequest.getBody().toString());
                 }
             }
-            
+
             Allure.addAttachment("API Request", "text/plain", requestDetails.toString());
-            
+
         } catch (Exception e) {
             System.err.println("Request logging error: " + e.getMessage());
             e.printStackTrace();
@@ -66,34 +70,34 @@ public class ApiTestLogger {
     public static void logResponse(Response response) {
         try {
             Map<String, Object> context = testContext.get();
-            
+
             if (response == null) {
                 context.put("lastStatusCode", 0);
                 context.put("lastResponseBody", null);
                 System.out.println(" API Yanıtı null");
                 return;
             }
-            
+
             int statusCode = response.getStatusCode();
             String responseBody = response.getBody() != null ? response.getBody().asString() : "";
-            
+
             // Son yanıt bilgilerini sakla
             context.put("lastStatusCode", statusCode);
             context.put("lastResponseBody", responseBody);
-            
+
             System.out.println(" API Yanıtı kaydedildi - Status: " + statusCode);
-            
+
             StringBuilder responseDetails = new StringBuilder();
             responseDetails.append("Response Details:\n");
             responseDetails.append("Status Code: ").append(statusCode).append("\n");
             responseDetails.append("Status Line: ").append(response.getStatusLine()).append("\n");
-            
+
             responseDetails.append("\nHeaders:\n");
             response.getHeaders().forEach(header ->
                 responseDetails.append(header.getName()).append(": ").append(header.getValue()).append("\n"));
-            
+
             responseDetails.append("\nResponse Time: ").append(response.getTime()).append("ms\n");
-            
+
             responseDetails.append("\nResponse Body:\n");
             try {
                 if (responseBody != null && !responseBody.isEmpty()) {
@@ -114,9 +118,9 @@ public class ApiTestLogger {
                 responseDetails.append("Error parsing response body: ").append(e.getMessage())
                              .append("\nRaw response body:\n").append(responseBody);
             }
-            
+
             Allure.addAttachment("API Response", "text/plain", responseDetails.toString());
-            
+
         } catch (Exception e) {
             System.err.println("Response logging error: " + e.getMessage());
             e.printStackTrace();
@@ -150,17 +154,17 @@ public class ApiTestLogger {
         Map<String, Object> context = testContext.get();
         int statusCode = getLastResponseStatusCode();
         String responseBody = (String) context.get("lastResponseBody");
-        
+
         StringBuilder summary = new StringBuilder();
         summary.append("Senaryo: ").append(scenarioName).append("\n");
         summary.append("Durum: ").append(success ? "✅ PASSED" : "❌ FAILED").append("\n");
         summary.append("Süre: ").append((System.currentTimeMillis() - (long) context.get("startTime")) / 1000.0).append(" saniye\n");
         summary.append("Status Code: ").append(statusCode).append("\n");
-        
+
         if (!success) {
             summary.append("Hata: Status Code ").append(statusCode);
         }
-        
+
         summary.append("\n\nSon API Yanıtı:\n");
         if (responseBody != null && !responseBody.isEmpty()) {
             if (responseBody.length() > 500) {
@@ -171,7 +175,7 @@ public class ApiTestLogger {
         } else {
             summary.append("Yanıt bulunamadı");
         }
-        
+
         Allure.addAttachment("Test Özeti", summary.toString());
         System.out.println(" Test özeti kaydedildi");
     }
@@ -195,24 +199,54 @@ public class ApiTestLogger {
         envInfo.append("Java Version: ").append(System.getProperty("java.version")).append("\n");
         envInfo.append("OS: ").append(System.getProperty("os.name")).append("\n");
         envInfo.append("User: ").append(System.getProperty("user.name")).append("\n");
-        
+
         Allure.addAttachment("Environment Info", "text/plain", envInfo.toString());
     }
 
     public static void logError(Exception e) {
         Map<String, Object> context = testContext.get();
         context.put("lastError", e);
-        
+
         StringBuilder errorDetails = new StringBuilder();
         errorDetails.append("Error Details:\n");
         errorDetails.append("Error Type: ").append(e.getClass().getName()).append("\n");
         errorDetails.append("Error Message: ").append(e.getMessage()).append("\n");
         errorDetails.append("\nStack Trace:\n");
-        
+
         for (StackTraceElement element : e.getStackTrace()) {
             errorDetails.append(element.toString()).append("\n");
         }
-        
+
         Allure.addAttachment("API Error", "text/plain", errorDetails.toString());
+    }
+
+    public static void startTestCase(String testId, String description) {
+        logger.info("Starting Test Case: {} - {}", testId, description);
+    }
+
+    public static void info(String message) {
+        logger.info(message);
+    }
+
+    public static void info(String message, Object... args) {
+        logger.info(message, args);
+    }
+
+    public static void logResponse(String description, Response response) {
+        logger.info("{}:", description);
+        logger.info("Status Code: {}", response.getStatusCode());
+        logger.info("Response Body: {}", response.getBody().asString());
+    }
+
+    public static void logVerification(String field, String expected, Object actual) {
+        logger.info("Verifying {}: Expected=[{}], Actual=[{}]", field, expected, actual);
+    }
+
+    public static void error(String message) {
+        logger.error(message);
+    }
+
+    public static void error(String message, Throwable throwable) {
+        logger.error(message, throwable);
     }
 }

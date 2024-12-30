@@ -73,32 +73,17 @@ public class ApiSteps {
     public void sendInvalidCategoryRequest() {
         System.out.println("🌐 Geçersiz kategori ID'si ile API isteği gönderiliyor...");
         
-        try {
-            response = RestAssured.given()
-                .filter(new AllureRestAssured())
-                .baseUri(BASE_URL)
-                .config(RestAssured.config()
-                    .redirect(redirectConfig().followRedirects(false)))
-                .when()
-                .get("/index.php?route=product/category&path=999999")
-                .then()
-                .extract()
-                .response();
-                
-            System.out.println("📊 API yanıtı: " + response.getStatusLine());
-        } catch (Exception e) {
-            System.out.println("⚠️ Beklenen 404 hatası alındı: " + e.getMessage());
-            response = RestAssured.given()
-                .filter(new AllureRestAssured())
-                .baseUri(BASE_URL)
-                .config(RestAssured.config()
-                    .redirect(redirectConfig().followRedirects(false)))
-                .when()
-                .get("/index.php?route=product/category&path=999999")
-                .then()
-                .extract()
-                .response();
-        }
+        response = RestAssured.given()
+            .filter(new AllureRestAssured())
+            .baseUri(BASE_URL)
+            .when()
+            .get("/index.php?route=product/category&path=999999")
+            .then()
+            .extract()
+            .response();
+            
+        System.out.println("📊 API yanıtı: " + response.getStatusLine());
+        System.out.println("📊 Status Code: " + response.getStatusCode());
         
         String statusMessage = String.format("Status Code: %d, Reason: %s", 
             response.getStatusCode(), response.getStatusLine());
